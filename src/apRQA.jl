@@ -1,4 +1,4 @@
-module aRQA
+module apRQA
 
 export approximate_rqa, embed, discretize, pairwise_proximities, stationary_states
 

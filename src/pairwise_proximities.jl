@@ -1,29 +1,42 @@
-using LinearAlgebra
-
 """
     pairwise_proximities(x)
 
-Calculate histogram of pairwise proximities.
+Calculate pairwise proximities.
 
 # Arguments
-- `x`: time series (n × d)
+- `x`: time series (n × d) matrix or vector
 
 # Returns
-- Histogram of pairwise proximities (scalar)
+- Number of pairwise proximities (scalar)
 """
+function pairwise_proximities(x::AbstractVector)
+    # Count occurrences of each unique value
+    unique_vals = unique(x)
+    counts = zeros(Int, length(unique_vals))
+    
+    for val in x
+        idx = findfirst(==(val), unique_vals)
+        counts[idx] += 1
+    end
+    
+    # Calculate dot product
+    pp = dot(counts, counts)
+    
+    return pp
+end
+
 function pairwise_proximities(x::AbstractMatrix)
-    # find unique rows and their indices
-    # Julia's unique return (unique_rows, indices)
+    # Find unique rows and their indices
     unique_rows = unique(eachrow(x))
     
-    # count appearances in each unique row
+    # Count occurrences of each unique row
     counts = zeros(Int, length(unique_rows))
     for row in eachrow(x)
         idx = findfirst(r -> all(r .== row), unique_rows)
         counts[idx] += 1
     end
     
-    # get dot product
+    # Calculate dot product
     pp = dot(counts, counts)
     
     return pp

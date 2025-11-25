@@ -1,20 +1,20 @@
 """
-    approximate_rqa(x, eps, minL)
+    approximate_rqa(x, ε, minL)
 
 Approximate Recurrence Quantification Analysis.
 
 # Arguments
 - `x`: embedded time series matrix (n × d)
-- `eps`: similarity threshold
+- `ε`: similarity threshold
 - `minL`: minimum line length
 
 # Returns
 - Vector with [RR, DET, L, LAM]
 """
-function approximate_rqa(x::AbstractMatrix, eps::Real, minL::Int)
+function approximate_rqa(x::AbstractMatrix, ε::Real, minL::Int)
     n = size(x, 1)
     
-    x1 = discretize(x, eps)
+    x1 = discretize(x, ε)
     x2 = embed(x1, minL, 1)
     x3 = embed(x1, minL + 1, 1)
     
