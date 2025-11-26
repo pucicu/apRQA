@@ -33,7 +33,7 @@ fprintf('Time:\t%2.2f (sec) \n \n',t);
 %% create tests
 x = load('../data/roessler.csv');
 x = x(1:2000);
-n = length(x);
+n = length(x); minL = 2;
 x1 = fDiscrete(x,0.5);
 x1a = fDiscrete(x,1);
 ex = [x x1 x1a]
@@ -63,5 +63,5 @@ RR = pp1/(n*n);
 DET = (minL*pp2 - (minL-1)*pp3) / (pp1 + 10^-10);
 L = (minL*pp2 - (minL-1)*pp3) / (pp2 - pp3);
 LAM = (minL*ss2 - (minL-1)*ss3) / (ss1 + 10^-10);
-ex = [n RR DET L LAM]
+ex = [RR DET L LAM]
 save('../test/data/rqa_expected.csv', 'ex', '-ascii', '-tabs')
