@@ -1,0 +1,31 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Approximate Recurrence Quantification Analysis apRQA
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Norbert
+    family-names: Marwan
+    email: marwan@pik-potsdam.de
+    affiliation: Potsdam Institute for Climate Impact Research (PIK)
+    orcid: 'https://orcid.org/0000-0003-1437-7039'
+identifiers:
+  - type: url
+    value: 'https://github.com/pucicu/apRQA'
+    description: Github-Page
+repository-code: 'https://github.com/pucicu/apRQA'
+abstract: >
+  Julia package to calculate selected main measures of the
+  recurrence quantification analysis (RQA). The calculation
+  is performed in an highly efficient but very approximative
+  way using the algorithm described in Spiegel et al, 2016. 
+keywords:
+  - software
+  - recurrence quantification analysis
+license: GPL-3.0+
+version: '1'
+date-released: '2025-11-26'

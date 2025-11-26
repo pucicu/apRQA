@@ -22,8 +22,8 @@ const minℓ = 2;   # Minimal line length
 # --- Reference calculation (DynamicalSystems.jl) ---
 println("--- Reference (DynamicalSystems.jl) ---")
 
-const m = 1;
-const τ = 1;
+const m = 3;
+const τ = 6;
 
 # Warmup run (to avoid benchmarking overhead)
 xe = DelayEmbeddings.embed(x[:], m, τ);
