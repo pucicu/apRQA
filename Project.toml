@@ -1,7 +1,7 @@
 name = "apRQA"
 uuid = "8d7a86c0-9208-4ca2-a270-64188500dc33"
-version = "1.4"
 authors = ["Norbert Marwan <marwan@pik-potsdam.de>"]
+version = "1.4.0"
 
 [deps]
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
@@ -9,6 +9,7 @@ DynamicalSystems = "61744808-ddfa-5f27-97ff-6e42cc95d634"
 RecurrenceAnalysis = "639c3291-70d9-5ea2-8c5b-839eba1ee399"
 Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 
 [compat]
 DelimitedFiles = "1.9.1"
