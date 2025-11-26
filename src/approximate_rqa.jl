@@ -52,5 +52,5 @@ function approximate_rqa(x::AbstractMatrix, ε::Real, minL::Int)
     numerator_LAM = minL * ss2 - (minL - 1) * ss3
     LAM = safe_divide(numerator_LAM, ss1)
 
-    return [RR, DET, L, LAM]
+    return (RR=RR, DET=DET, L=L, LAM=LAM)::NamedTuple{(:RR, :DET, :L, :LAM), NTuple{4, Float64}}
 end

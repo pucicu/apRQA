@@ -12,9 +12,16 @@
         # Run apRQA
         result = approximate_rqa(x, ε, minL)
         
+
         # Check output structure
-        @test length(result) == 4
-        @test all(result .>= 0)  # All values should be non-negative
+        @test result isa NamedTuple
+        @test haskey(result, :RR)
+        @test haskey(result, :DET)
+        @test haskey(result, :L)
+        @test haskey(result, :LAM)
+        
+        # Check all values are non-negative
+        @test all(>=(0), values(result))  # All values should be non-negative
         
         # Check individual measures
         RR, DET, L, LAM = result
@@ -37,8 +44,9 @@
         @test length(result1) == 4
         @test length(result2) == 4
         
-        # Larger epsilon should generally give higher RR
-        @test result2[1] >= result1[1]  # RR increases with epsilon
+        # Larger epsilon should generally give higher RR and LAM
+        @test result2[:RR] >= result1[:RR]  # RR increases with epsilon
+        @test result2[:LAM] >= result1[:LAM]  # LAM increases with epsilon
     end
     
     @testset "Different minL values" begin
@@ -56,8 +64,8 @@
         @test length(result_minL3) == 4
         
         # L should be >= minL
-        @test result_minL2[3] >= 2
-        @test result_minL3[3] >= 3
+        @test result_minL2[:L] >= 2
+        @test result_minL3[:L] >= 3
     end
     
     @testset "Edge cases" begin
@@ -65,12 +73,12 @@
         x = rand(50, 2)
         result = approximate_rqa(x, 0.1, 2)
         @test length(result) == 4
-        @test all(.!isnan.(result))  # No NaN values
+        @test all(!isnan, values(result))  # No NaN values
         
         # Large epsilon (high recurrence)
         x = rand(100, 2)
         result = approximate_rqa(x, 1.0, 2)
-        @test result[1] > 0  # RR should be positive
+        @test result[:RR] > 0  # RR should be positive
     end
     
     @testset "Validation against reference data" begin
@@ -78,8 +86,7 @@
         data_dir = joinpath(@__DIR__, "data")
         
         required_files = [
-            "proximities_expected.csv",
-            "stationary_states_expected.csv",
+            "timeseries_raw.csv",
             "rqa_expected.csv"
         ]
         
@@ -88,27 +95,16 @@
         
         if all_files_exist
             # Load reference data
-            pp = readdlm(joinpath(data_dir, "proximities_expected.csv"))
-            ss = readdlm(joinpath(data_dir, "stationary_states_expected.csv"))
+            x = readdlm(joinpath(data_dir, "timeseries_raw.csv"))
             expected = readdlm(joinpath(data_dir, "rqa_expected.csv"))
             
-            # Extract values from reference data
-            minL = 2
-            pp1, pp2, pp3 = pp[1], pp[2], pp[3]
-            ss1, ss2, ss3 = ss[1], ss[2], ss[3]
-            n = expected[1]
-            
-            # Calculate RQA measures using same formulas as approximate_rqa
-            RR = pp1 / (n * n)
-            DET = (minL * pp2 - (minL - 1) * pp3) / (pp1 + 1e-10)
-            L = (minL * pp2 - (minL - 1) * pp3) / (pp2 - pp3)
-            LAM = (minL * ss2 - (minL - 1) * ss3) / (ss1 + 1e-10)
+            result = approximate_rqa(x, 0.5, 2)
             
             # Test against reference values
-            @test RR ≈ expected[2] atol=1e-5
-            @test DET ≈ expected[3] atol=1e-5
-            @test L ≈ expected[4] atol=1e-5
-            @test LAM ≈ expected[5] atol=1e-5
+            @test result[:RR] ≈ expected[1] atol=1e-5
+            @test result[:DET] ≈ expected[2] atol=1e-5
+            @test result[:L] ≈ expected[3] atol=1e-5
+            @test result[:LAM] ≈ expected[4] atol=1e-5
         else
             missing = [f for f in required_files if !isfile(joinpath(data_dir, f))]
             @info "Skipping validation tests - missing files: $(join(missing, ", "))"
