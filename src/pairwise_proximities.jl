@@ -1,3 +1,5 @@
+using StatsBase
+
 """
     pairwise_proximities(x)
 
@@ -11,33 +13,24 @@ Calculate pairwise proximities.
 """
 function pairwise_proximities(x::AbstractVector)
     # Count occurrences of each unique value
-    unique_vals = unique(x)
-    counts = zeros(Int, length(unique_vals))
-    
-    for val in x
-        idx = findfirst(==(val), unique_vals)
-        counts[idx] += 1
-    end
-    
+    counts = values(countmap(x))
+
     # Calculate dot product
     pp = dot(counts, counts)
-    
+
     return pp
 end
 
+
 function pairwise_proximities(x::AbstractMatrix)
-    # Find unique rows and their indices
-    unique_rows = unique(eachrow(x))
-    
+    # Convert each row to a Tuple so countmap can hash it
+    rows = Tuple.(eachrow(x))
+
     # Count occurrences of each unique row
-    counts = zeros(Int, length(unique_rows))
-    for row in eachrow(x)
-        idx = findfirst(r -> all(r .== row), unique_rows)
-        counts[idx] += 1
-    end
-    
+    counts = values(countmap(rows))
+
     # Calculate dot product
     pp = dot(counts, counts)
-    
+
     return pp
 end

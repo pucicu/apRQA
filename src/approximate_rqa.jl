@@ -1,35 +1,56 @@
 """
     approximate_rqa(x, ε, minL)
 
-Approximate Recurrence Quantification Analysis.
+Approximate Recurrence Quantification Analysis (RQA).
 
 # Arguments
-- `x`: embedded time series matrix (n × d)
-- `ε`: similarity threshold
-- `minL`: minimum line length
+- `x`: Embedded time series matrix (n × d)
+- `ε`: Similarity threshold
+- `minL`: Minimum line length
 
 # Returns
-- Vector with [RR, DET, L, LAM]
+- Vector with [RR, DET, L, LAM], where:
+  - `RR`: Recurrence rate
+  - `DET`: Determinism
+  - `L`: Average diagonal line length
+  - `LAM`: Laminarity
 """
 function approximate_rqa(x::AbstractMatrix, ε::Real, minL::Int)
+    # Input validation
+    if minL < 1
+        throw(ArgumentError("minL must be >= 1"))
+    end
+    if ε <= 0
+        throw(ArgumentError("ε must be > 0"))
+    end
+
     n = size(x, 1)
-    
+
+    # Precompute intermediate results
     x1 = discretize(x, ε)
     x2 = embed(x1, minL, 1)
     x3 = embed(x1, minL + 1, 1)
-    
+
     pp1 = pairwise_proximities(x1)
     pp2 = pairwise_proximities(x2)
     pp3 = pairwise_proximities(x3)
-    
+
     ss1 = pp1
     ss2 = stationary_states(x1, x2)
     ss3 = stationary_states(x1, x3)
-    
-    RR = pp1 / (n * n)
-    DET = (minL * pp2 - (minL - 1) * pp3) / (pp1 + 1e-10)
-    L = (minL * pp2 - (minL - 1) * pp3) / (pp2 - pp3)
-    LAM = (minL * ss2 - (minL - 1) * ss3) / (ss1 + 1e-10)
-    
+
+    # Safe division helper
+    safe_divide(a, b) = a / (b + 1e-10)
+
+    # Compute RQA measures
+    RR = safe_divide(pp1, n * n)
+
+    numerator_DET_L = minL * pp2 - (minL - 1) * pp3
+    DET = safe_divide(numerator_DET_L, pp1)
+    L = safe_divide(numerator_DET_L, pp2 - pp3)
+
+    numerator_LAM = minL * ss2 - (minL - 1) * ss3
+    LAM = safe_divide(numerator_LAM, ss1)
+
     return [RR, DET, L, LAM]
 end

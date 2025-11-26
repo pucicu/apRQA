@@ -6,5 +6,5 @@ using apRQA
     include("test_discretize.jl")
     include("test_pairwise_proximities.jl")
     include("test_stationary_states.jl")
-    include("test_arqa.jl")
+    include("test_aprqa.jl")
 end

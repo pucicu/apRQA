@@ -10,28 +10,22 @@ Discretize time series.
 # Returns
 - Discretized time series
 """
-function discretize(x::AbstractVector, eps::Real)
+function discretize(x::AbstractArray, eps::Real)
     if eps > 0
-        scale = 1.0 / (2 * eps)
-        return floor.(x .* scale)
+        scale = 1.0 / (2eps)
+        return @. floor(x * scale)
     else
         return x
     end
 end
 
-function discretize(x::AbstractMatrix, eps::Real)
-    if eps > 0
-        scale = 1.0 / (2 * eps)
-        return floor.(x .* scale)
-    else
-        return x
-    end
-end
 
 function discretize(x::AbstractMatrix, eps::AbstractVector)
-    if any(eps .> 0)
-        return floor.(x .* (1.0 ./ (2.0 .* eps')'))
-    else
-        return x
-    end
+    @assert size(x, 2) == length(eps) "eps must match number of columns"
+
+    # build column-wise scale vector
+    scale = @. 1.0 / (2eps)
+
+    # broadcasting handles row × column broadcasting
+    return @. floor(x * scale)
 end
