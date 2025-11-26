@@ -4,7 +4,7 @@
 Approximate Recurrence Quantification Analysis (RQA).
 
 # Arguments
-- `x`: Embedded time series matrix (n × d)
+- `x`: Embedded time series (vector or matrix)
 - `ε`: Similarity threshold
 - `minL`: Minimum line length
 
@@ -15,6 +15,11 @@ Approximate Recurrence Quantification Analysis (RQA).
   - `L`: Average diagonal line length
   - `LAM`: Laminarity
 """
+function approximate_rqa(x::AbstractVector, ε::Real, minL::Int)
+    # Convert vector to n×1 matrix
+    return approximate_rqa(reshape(x, :, 1), ε, minL)
+end
+
 function approximate_rqa(x::AbstractMatrix, ε::Real, minL::Int)
     # Input validation
     if minL < 1

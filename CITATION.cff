@@ -17,6 +17,11 @@ identifiers:
   - type: url
     value: 'https://github.com/pucicu/apRQA'
     description: Github-Page
+  - type: swh
+    value: 'swh:1:dir:db752f73e17002764e5dbe15b1cccef804c2510a'
+  - type: doi
+    value: 10.5281/zenodo.17720361
+    description: Zenodo
 repository-code: 'https://github.com/pucicu/apRQA'
 abstract: >
   Julia package to calculate selected main measures of the
@@ -27,5 +32,6 @@ keywords:
   - software
   - recurrence quantification analysis
 license: GPL-3.0+
+commit: 9c52051
 version: '1'
 date-released: '2025-11-26'
